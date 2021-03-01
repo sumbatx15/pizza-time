@@ -119,12 +119,12 @@ const updateResultMessage = ({ percent, bugs, minutesLeft }) => {
   elSubTitle.innerText = `${bugs} bugs found and ${minutesLeft} minutes until 17:00`;
 };
 
-function renderRainDrops({
+const renderRainDrops = ({
   target = elApp,
   count,
   staggerSpeed,
   maxDisplayCount,
-}) {
+}) => {
   return Array.from({ length: Math.min(count, maxDisplayCount) }, (_, i) => {
     const elDrop = createRainDrop();
     target.appendChild(elDrop);
@@ -137,19 +137,19 @@ function renderRainDrops({
   });
 }
 
-function getPizzaChance({ bugs, minutesLeft }) {
+const calcPizzaChance = ({ bugs, minutesLeft }) => {
   const chance = Math.floor((bugs / minutesLeft) * 300);
   return Math.min(chance, 100);
 }
 
-async function render(target = elApp) {
+const render = async (target = elApp) => {
   const bugs = await service.getBugsCount();
   animateLoading(false);
 
   const staggerSpeed = (1 / bugs) * 1500;
   const gaugeStartDelay = bugs * staggerSpeed;
   const minutesLeft = getMinutesLeft();
-  const pizzaChance = getPizzaChance({ bugs, minutesLeft });
+  const pizzaChance = calcPizzaChance({ bugs, minutesLeft });
 
   renderRainDrops({ target, count: bugs, staggerSpeed, maxDisplayCount: 100 });
   animatePizzaGauge({ startDelay: gaugeStartDelay, percent: pizzaChance });
